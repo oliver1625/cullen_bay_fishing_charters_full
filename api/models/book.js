@@ -1,24 +1,21 @@
 const mongoose = require("mongoose");
 
-// const { Schema } = mongoose;
-
-// const schema = Schema()
 
 const BookSchema = new mongoose.Schema({
-  first_name: {
+  userId: {
     type: String,
     required: true,
   },
-  last_name: {
+  date: {
+    type: Date,
+    required: true,
+  },
+  time: {
     type: String,
     required: true,
   },
-  phone_number: {
+  numberofParticipants: {
     type: Number,
-    required: true,
-  },
-  email: {
-    type: String,
     required: true,
   },
 });
