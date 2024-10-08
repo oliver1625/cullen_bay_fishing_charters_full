@@ -26,7 +26,6 @@ const sendConfirmationEmail = async (email, userName) => {
 
     // Send the email
     let info = await transporter.sendMail(mailOptions);
-
     console.log("Email sent: %s", info.messageId);
     return info;
   } catch (error) {
