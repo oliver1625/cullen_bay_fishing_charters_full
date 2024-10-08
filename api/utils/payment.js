@@ -1,8 +1,7 @@
-// require("dotenv").config();
+require("dotenv").config();
 const express = require("express");
 const Stripe = require("stripe");
-const stripe = Stripe(process.env.STRIPE_SECRET_KEY); // Store your secret key in .env
-
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 const app = express();
 
 app.use(express.json());
@@ -12,9 +11,9 @@ const paymentGateway = async (req, res) => {
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount, // amount in cents
-      currency: "aud", // Australian Dollar
-      payment_method_types: ["card"], // Accept card payments (Visa, Mastercard, etc.)
+      amount,
+      currency: "aud",
+      payment_method_types: ["card"],
     });
 
     res.json({
@@ -25,9 +24,4 @@ const paymentGateway = async (req, res) => {
   }
 };
 
-// const PORT = process.env.PORT || 5000;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-
-module.exports = paymentGateway
+module.exports = paymentGateway;

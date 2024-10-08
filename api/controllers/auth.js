@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs/dist/bcrypt");
 const User = require("../models/user");
 const createError = require("../utils/error");
+const validator = require("email-validator");
 const jwt = require("jsonwebtoken");
 
 const register = async (req, res, next) => {
@@ -9,25 +10,27 @@ const register = async (req, res, next) => {
     phone_number: req.body.phone_number,
   });
 
-  let errorType = '';
+  let errorType = "";
 
-    if (existingUser && existingNumber) {
-      errorType = 'emailAndNumber';
-    } else if (existingUser) {
-      errorType = 'email';
-    } else if (existingNumber) {
-      errorType = 'number';
-    }
+  if (existingUser && existingNumber) {
+    errorType = "emailAndNumber";
+  } else if (existingUser) {
+    errorType = "email";
+  } else if (existingNumber) {
+    errorType = "number";
+  }
 
-    switch (errorType) {
-      case 'email':
-        return res.status(400).json({ message: 'Email already exists.' });
-      case 'number':
-        return res.status(400).json({ message: 'Phone Number already exists.' });
-      case 'emailAndNumber':
-        return res.status(400).json({ message: 'Email and Phone Number already exist.' });
-      default:
-    }
+  switch (errorType) {
+    case "email":
+      return res.status(400).json({ message: "Email already exists." });
+    case "number":
+      return res.status(400).json({ message: "Phone Number already exists." });
+    case "emailAndNumber":
+      return res
+        .status(400)
+        .json({ message: "Email and Phone Number already exist." });
+    default:
+  }
   const salt = bcrypt.genSaltSync(10);
   const hash = bcrypt.hashSync(req.body.password, salt);
 
@@ -39,13 +42,27 @@ const register = async (req, res, next) => {
     password: hash,
   });
   try {
+    const isValidEmail = validator.validate(req.body.email);
+    const isGmail = req.body.email.endsWith("@gmail.com");
+    if (!isValidEmail) {
+      return res.status(400).json({ message: "Invalid email." });
+    }
+
+    if (!isGmail) {
+      return res
+        .status(400)
+        .json({ message: "Only Gmail addresses are allowed." });
+    }
     await newUser.save();
+
     res.status(200).send("User has been created.");
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({
+      message:
+        "An error occurred while creating the user. Please try again later.",
+    });
   }
 };
-
 
 const login = async (req, res, next) => {
   try {
