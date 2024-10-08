@@ -1,29 +1,25 @@
-// Load environment variables
 require("dotenv").config();
 
 const nodemailer = require("nodemailer");
 
-// Function to send confirmation email
-const sendConfirmationEmail = async (userEmail, userName) => {
+const sendConfirmationEmail = async (email, userName) => {
   try {
-    // Create a Nodemailer transporter using Gmail or any other SMTP server
     let transporter = nodemailer.createTransport({
-      service: "gmail", // Use 'smtp' for other SMTP services
+      service: "gmail", 
       auth: {
-        user: process.env.EMAIL_USER, // Your Gmail address
-        pass: process.env.EMAIL_PASS, // Your App Password
+        user: process.env.EMAIL_USER, 
+        pass: process.env.EMAIL_PASS, 
       },
     });
-
-    // Define the email options
+    console.log(email,userName, "userEmail");
     const mailOptions = {
       from: `"Your Cullen Bay FIshing Charters" <${process.env.EMAIL_USER}>`, // Sender address
-      to: userEmail, // Recipient's email address
-      subject: "Booking Confirmation", // Subject line
+      to: email, 
+      subject: "Booking Confirmation", 
       html: `
         <h2>Booking Confirmation</h2>
         <p>Dear ${userName},</p>
-        <p>Thank you for your booking! We have received your booking and are excited to host you.</p>
+        <p>Thank you for your Payment! We have received your payment and are excited to host you.</p>
         <p>Best regards,<br/>Cullen Bay fishing charter</p>
       `,
     };
@@ -31,7 +27,6 @@ const sendConfirmationEmail = async (userEmail, userName) => {
     // Send the email
     let info = await transporter.sendMail(mailOptions);
 
-    
     console.log("Email sent: %s", info.messageId);
     return info;
   } catch (error) {
@@ -39,6 +34,4 @@ const sendConfirmationEmail = async (userEmail, userName) => {
   }
 };
 
-// Example usage: Sending an email to the user
-// sendConfirmationEmail("user@example.com", "John Doe");
 module.exports = sendConfirmationEmail;

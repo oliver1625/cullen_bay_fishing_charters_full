@@ -19,6 +19,7 @@ router.put("/:id", verifyUser, updateBooking);
 router.delete("/:id", verifyUser, deleteBooking);
 router.get("/:id", verifyUser, getBooking);
 router.get("/", verifyAdmin, getAllBookings);
+// router.post("/create-payment-intent", verifyUser, paymentGateway);
 
 // router.post("/", createBooking);
 // router.put("/:id", updateBooking);

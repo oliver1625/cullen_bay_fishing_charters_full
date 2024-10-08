@@ -5,15 +5,17 @@ const sendConfirmationEmail = require("../utils/mail");
 //Create a booking
 const createBooking = async (req, res, next) => {
   const id = req.params.id;
-
   const newUser = new booking(req.body);
+  console.log(req.body);
   newUser["userId"] = id;
+  newUser["email"] = req.body.email;
+  newUser["first_name"] = req.body.first_name;
+
   try {
     const saveduser = await newUser.save();
-    await sendConfirmationEmail(req.body.email, req.body.first_name)
+    await sendConfirmationEmail(req.body.email, req.body.first_name);
     res.status(200).json(saveduser);
-
-  } catch(err) {
+  } catch (err) {
     res.status(500).json(err);
   }
 };
@@ -57,7 +59,7 @@ const getAllBookings = async (req, res, next) => {
   try {
     const bookings = await booking.find();
     res.status(200).json(bookings);
-    console.log(bookings)
+    // console.log(bookings)
   } catch {
     next(createError(500, "500 error"));
   }
